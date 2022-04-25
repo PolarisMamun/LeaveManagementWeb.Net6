@@ -1,17 +1,12 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using LeaveManagement.Web.Constants;
+using LeaveManagement.Web.Contracts;
+using LeaveManagement.Web.Data;
+using LeaveManagement.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LeaveManagement.Web.Data;
-using LeaveManagement.Web.Models;
-using AutoMapper;
-using LeaveManagement.Web.Contracts;
-using Microsoft.AspNetCore.Authorization;
-using LeaveManagement.Web.Constants;
 
 namespace LeaveManagement.Web.Controllers
 {
@@ -19,20 +14,20 @@ namespace LeaveManagement.Web.Controllers
     public class LeaveRequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
+
         private readonly ILeaveRequestRepository leaveRequestRepository;
 
-        public LeaveRequestsController(ApplicationDbContext context ,ILeaveRequestRepository leaveRequestRepository)
+        public LeaveRequestsController(ApplicationDbContext context, ILeaveRequestRepository leaveRequestRepository)
         {
-            _context = context;            
+            _context = context;
             this.leaveRequestRepository = leaveRequestRepository;
         }
 
-        [Authorize(Roles =Roles.Administrator)]
+        [Authorize(Roles = Roles.Administrator)]
         // GET: LeaveRequests
         public async Task<IActionResult> Index()
         {
-            var model =await leaveRequestRepository.GetAdminLeaveRequestList();
+            var model = await leaveRequestRepository.GetAdminLeaveRequestList();
             return View(model);
         }
 
@@ -44,9 +39,9 @@ namespace LeaveManagement.Web.Controllers
 
         // GET: LeaveRequests/Details/5
         public async Task<IActionResult> Details(int? id)
-        {            
+        {
             var model = await leaveRequestRepository.GetLeaveRequestAsync(id);
-            if(model == null)
+            if (model == null)
             {
                 return NotFound();
             }
@@ -56,7 +51,7 @@ namespace LeaveManagement.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> ApproveRequest(int id,bool approved)
+        public async Task<IActionResult> ApproveRequest(int id, bool approved)
         {
             try
             {
@@ -120,7 +115,7 @@ namespace LeaveManagement.Web.Controllers
             {
                 ModelState.AddModelError(string.Empty, "An Error Has Occurred. Please Try Again Later");
             }
-            
+
             model.LeaveTypes = new SelectList(_context.LeaveTypes, "Id", "Name", model.LeaveTypeId);
             return View(model);
         }

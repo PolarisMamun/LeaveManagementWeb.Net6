@@ -1,24 +1,19 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using LeaveManagement.Web.Data;
 using AutoMapper;
-using LeaveManagement.Web.Models;
-using LeaveManagement.Web.Contracts;
-using Microsoft.AspNetCore.Authorization;
 using LeaveManagement.Web.Constants;
+using LeaveManagement.Web.Contracts;
+using LeaveManagement.Web.Data;
+using LeaveManagement.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagement.Web.Controllers
 {
     [Authorize(Roles = Roles.Administrator)]
     public class LeaveTypesController : Controller
     {
-        
+
         private readonly ILeaveTypeRepository leaveTypeRepository;
         private readonly IMapper mapper;
         private readonly ILeaveAllocationRepository leaveAllocationRepository;
@@ -36,13 +31,13 @@ namespace LeaveManagement.Web.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var leaveTypes =mapper.Map<List<LeaveTypeVM>>(await leaveTypeRepository.GetAllAsync());
+            var leaveTypes = mapper.Map<List<LeaveTypeVM>>(await leaveTypeRepository.GetAllAsync());
             return View(leaveTypes);
         }
 
         // GET: LeaveTypes/Details/5
         public async Task<IActionResult> Details(int? id)
-        {          
+        {
             var leaveType = await leaveTypeRepository.GetAsync(id);
             if (leaveType == null)
             {
