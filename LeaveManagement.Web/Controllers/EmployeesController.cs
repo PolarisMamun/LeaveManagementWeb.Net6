@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using LeaveManagement.Web.Constants;
-using LeaveManagement.Web.Contracts;
-using LeaveManagement.Web.Data;
-using LeaveManagement.Web.Models;
-using Microsoft.AspNetCore.Http;
+using LeaveManagement.Common.Constants;
+using LeaveManagement.Application.Contracts;
+using LeaveManagement.Data;
+using LeaveManagement.Common.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +15,7 @@ namespace LeaveManagement.Web.Controllers
         private readonly ILeaveAllocationRepository leaveAllocationRepository;
         private readonly ILeaveTypeRepository leaveTypeRepository;
 
-        public EmployeesController(UserManager<Employee> userManager, 
+        public EmployeesController(UserManager<Employee> userManager,
             IMapper mapper, ILeaveAllocationRepository leaveAllocationRepository,
             ILeaveTypeRepository leaveTypeRepository)
         {
@@ -40,7 +39,7 @@ namespace LeaveManagement.Web.Controllers
             var model = await leaveAllocationRepository.GetEmployeeAllocations(id);
             return View(model);
         }
-        
+
         // GET: EmployeesController/EditAllocation/5
         public async Task<ActionResult> EditAllocation(int id)
         {
@@ -59,18 +58,18 @@ namespace LeaveManagement.Web.Controllers
         {
             try
             {
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
-                    
-                   if (await leaveAllocationRepository.UpdateEmployeeAllocation(model) )
+
+                    if (await leaveAllocationRepository.UpdateEmployeeAllocation(model))
                     {
                         return RedirectToAction(nameof(ViewAllocations), new { id = model.EmployeeId });
-                    }                   
+                    }
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "An Error Has Occurred. Please Try Again Later"); 
+                ModelState.AddModelError(string.Empty, "An Error Has Occurred. Please Try Again Later");
             }
             model.Employee = mapper.Map<EmployeeListVM>(await userManager.FindByIdAsync(model.EmployeeId));
             model.LeaveType = mapper.Map<LeaveTypeVM>(await leaveTypeRepository.GetAsync(model.LeaveTypeId));
