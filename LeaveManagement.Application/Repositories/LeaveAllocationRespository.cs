@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace LeaveManagement.Application.Repositories
 {
     public class LeaveAllocationRespository : GenericRepository<LeaveAllocation>, ILeaveAllocationRepository
@@ -37,14 +36,14 @@ namespace LeaveManagement.Application.Repositories
 
         public async Task<bool> AllocationExists(string employeeId, int leaveTypeId, int period)
         {
-            return await context.leaveAllocations.AnyAsync(q => q.EmployeeId == employeeId
+            return await context.LeaveAllocations.AnyAsync(q => q.EmployeeId == employeeId
                                                                 && q.LeaveTypeId == leaveTypeId
                                                                 && q.Period == period);
         }
 
         public async Task<EmployeeAllocationVM> GetEmployeeAllocations(string employeeId)
         {
-            var allocations = await context.leaveAllocations
+            var allocations = await context.LeaveAllocations
                 .Include(q => q.LeaveType)
                 .Where(q => q.EmployeeId == employeeId)
                 .ProjectTo<LeaveAllocationVM>(configurationProvider)
@@ -61,7 +60,7 @@ namespace LeaveManagement.Application.Repositories
 
         public async Task<LeaveAllocationEditVM> GetEmployeeAllocation(int id)
         {
-            var allocation = await context.leaveAllocations
+            var allocation = await context.LeaveAllocations
                 .Include(q => q.LeaveType)
                 .FirstOrDefaultAsync(q => q.Id == id);
 
@@ -104,10 +103,8 @@ namespace LeaveManagement.Application.Repositories
 
             foreach (var employee in employeesWithNewAllocations)
             {
-
                 await emailSender.SendEmailAsync(employee.Email, $"Leave Allocation Posted for {period}", $"Your {leaveType.Name} " + $"has been posted for the period of {period}. You have been give {leaveType.DefaultDays}.");
             }
-
         }
 
         public async Task<bool> UpdateEmployeeAllocation(LeaveAllocationEditVM model)
@@ -126,7 +123,7 @@ namespace LeaveManagement.Application.Repositories
 
         public async Task<LeaveAllocation> GetEmployeeAllocation(string employeeId, int leaveTypeId)
         {
-            return await context.leaveAllocations.FirstOrDefaultAsync(q => q.EmployeeId == employeeId && q.LeaveTypeId == leaveTypeId);
+            return await context.LeaveAllocations.FirstOrDefaultAsync(q => q.EmployeeId == employeeId && q.LeaveTypeId == leaveTypeId);
         }
     }
 }

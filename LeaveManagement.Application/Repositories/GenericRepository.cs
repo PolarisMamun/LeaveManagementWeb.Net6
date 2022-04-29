@@ -1,5 +1,6 @@
 ﻿using LeaveManagement.Application.Contracts;
 using LeaveManagement.Data;
+using LeaveManagement.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagement.Application.Repositories
@@ -34,7 +35,7 @@ namespace LeaveManagement.Application.Repositories
 
         public async Task<bool> Exists(int id)
         {
-            var entity =await GetAsync(id);
+            var entity = await GetAsync(id);
             return entity != null;
         }
 
@@ -43,7 +44,7 @@ namespace LeaveManagement.Application.Repositories
             return await context.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetAsync(int? id)
+        public async Task<T?> GetAsync(int? id)
         {
             if (id == null)
             {
@@ -54,8 +55,8 @@ namespace LeaveManagement.Application.Repositories
 
         public async Task UpdateAsync(T entity)
         {
-            ////context.Update(entity);
-            context.Entry(entity).State = EntityState.Modified;
+            context.Update(entity);
+            //context.Entry(entity).State = EntityState.Modified;
             await context.SaveChangesAsync();
         }
     }

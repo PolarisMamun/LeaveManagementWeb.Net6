@@ -12,5 +12,6 @@ namespace LeaveManagement.Application.Contracts
         Task ChangeApprovalStatus(int leaveRequestId, bool approved);
         Task CancelLeaveRequest(int leaveRequestId);
         Task<AdminLeaveRequestViewVM> GetAdminLeaveRequestList();
+
     }
 }

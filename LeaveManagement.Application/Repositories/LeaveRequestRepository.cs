@@ -20,8 +20,8 @@ namespace LeaveManagement.Application.Repositories
         private readonly IEmailSender emailSender;
         private readonly UserManager<Employee> userManager;
 
-        public LeaveRequestRepository(ApplicationDbContext context,
-            IMapper mapper,
+        public LeaveRequestRepository(ApplicationDbContext context, 
+            IMapper mapper, 
             IHttpContextAccessor httpContextAccessor,
             ILeaveAllocationRepository leaveAllocationRepository,
             AutoMapper.IConfigurationProvider configurationProvider,
@@ -55,7 +55,7 @@ namespace LeaveManagement.Application.Repositories
 
             if (approved)
             {
-                var allocation = await leaveAllocationRepository.GetEmployeeAllocation(leaveRequest.RequestingEmployeeId, leaveRequest.LeaveTypeId);
+                var allocation = await leaveAllocationRepository.GetEmployeeAllocation(leaveRequest.RequestingEmployeeId, leaveRequestId);
                 int daysRequested = (int)(leaveRequest.EndDate - leaveRequest.StartDate).TotalDays;
                 allocation.NumberOfDays -= daysRequested;
                 await leaveAllocationRepository.UpdateAsync(allocation);
@@ -73,13 +73,13 @@ namespace LeaveManagement.Application.Repositories
             var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
 
             var leaveAllocation = await leaveAllocationRepository.GetEmployeeAllocation(user.Id, model.LeaveTypeId);
-            if (leaveAllocation == null)
+            if(leaveAllocation == null)
             {
                 return false;
             }
             int daysRequested = (int)(model.EndDate.Value - model.StartDate.Value).TotalDays;
 
-            if (daysRequested > leaveAllocation.NumberOfDays)
+            if(daysRequested > leaveAllocation.NumberOfDays)
             {
                 return false;
             }
@@ -104,7 +104,7 @@ namespace LeaveManagement.Application.Repositories
                 ApprovedRequests = leaveRequests.Count(q => q.Approved == true),
                 PendingRequests = leaveRequests.Count(q => q.Approved == null),
                 RejectedRequests = leaveRequests.Count(q => q.Approved == false),
-                LeaveRequests = mapper.Map<List<LeaveRequestVM>>(leaveRequests)
+                LeaveRequests = mapper.Map<List<LeaveRequestVM>>(leaveRequests),
             };
             foreach (var leaveRequest in model.LeaveRequests)
             {

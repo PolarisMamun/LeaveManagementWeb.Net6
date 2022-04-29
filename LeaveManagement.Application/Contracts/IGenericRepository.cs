@@ -1,4 +1,6 @@
-﻿namespace LeaveManagement.Application.Contracts
+﻿using LeaveManagement.Data;
+
+namespace LeaveManagement.Application.Contracts
 {
     public interface IGenericRepository<T> where T : class
     {

@@ -21,8 +21,7 @@ namespace LeaveManagement.Data
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            foreach (var entry in base.ChangeTracker.Entries<BaseEntity>().Where(q=> q.State == EntityState.Added 
-            || q.State == EntityState.Modified))
+            foreach (var entry in base.ChangeTracker.Entries<BaseEntity>().Where(q => q.State == EntityState.Added || q.State == EntityState.Modified))
             {
                 entry.Entity.DateModified = DateTime.Now;
 
@@ -36,8 +35,7 @@ namespace LeaveManagement.Data
 
         public DbSet<LeaveType> LeaveTypes { get; set; }
 
-        public DbSet<LeaveAllocation> leaveAllocations { get; set; }
+        public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
-
     }
 }
